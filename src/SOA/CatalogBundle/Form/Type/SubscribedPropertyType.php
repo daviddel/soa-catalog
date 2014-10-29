@@ -28,7 +28,7 @@ class SubscribedPropertyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('property')
+            ->add('property', null, array('property' => 'key'))
             ->add('value', 'text')
             ->add('locale', 'text');
     }
