@@ -1,0 +1,11 @@
+product:
+    resource: @SOACatalogBundle/Controller/ProductController.php
+    type:     rest
+    prefix: /{_locale}
+    name_prefix:  soa_catalog_product_
+
+property:
+    resource: @SOACatalogBundle/Controller/PropertyController.php
+    type:     rest
+    prefix: /{_locale}
+    name_prefix:  soa_catalog_property_

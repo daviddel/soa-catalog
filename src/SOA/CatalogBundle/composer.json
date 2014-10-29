@@ -1,0 +1,42 @@
+{
+    "name": "ecommerce-api/catalog-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony ECommerceAPICatalogBundle",
+    "keywords": ["Catalog Management"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "David Delevoye",
+            "email": "daviddelevoye@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2",
+        "symfony/framework-bundle": "~2.3",
+        "symfony/twig-bundle": "~2.3",
+        "symfony/form": "~2.3",
+        "ecommerce-api/intl-bundle": "~1.0",
+        "ecommerce-api/model-manager-bundle": "~1.0",
+        "friendsofsymfony/rest-bundle": "dev-master",
+        "jms/serializer-bundle": "dev-master"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "*",
+        "swiftmailer/swiftmailer": ">=4.3, <6.0",
+        "willdurand/propel-typehintable-behavior": "dev-master",
+        "symfony/yaml": "~2.3",
+        "symfony/validator": "~2.3"
+    },
+    "suggest": {
+        "willdurand/propel-typehintable-behavior": "Needed when using the propel implementation"
+    },
+    "autoload": {
+        "psr-4": { "ECommerceAPI\\CatalogBundle\\": "" }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    }
+}

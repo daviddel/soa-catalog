@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="soa.catalog.product.model.class">SOA\CatalogBundle\Entity\Product</parameter>
+        <parameter key="soa.catalog.property.model.class">SOA\CatalogBundle\Entity\Property</parameter>
+        <parameter key="soa.catalog.variant.model.class">SOA\CatalogBundle\Entity\Variant</parameter>
+        <parameter key="soa.catalog.subscribed_property.model.class">SOA\CatalogBundle\Entity\SubscribedProperty</parameter>
+    </parameters>
+
+    <services>
+        <service id="soa.catalog.product.form.type" class="SOA\CatalogBundle\Form\Type\ProductType">
+            <tag name="form.type" alias="product" />
+            <argument>%soa.catalog.product.model.class%</argument>
+        </service>
+        <service id="soa.catalog.property.form.type" class="SOA\CatalogBundle\Form\Type\PropertyType">
+            <tag name="form.type" alias="property" />
+            <argument>%soa.catalog.property.model.class%</argument>
+        </service>
+        <service id="soa.catalog.variant.form.type" class="SOA\CatalogBundle\Form\Type\VariantType">
+            <tag name="form.type" alias="variant" />
+            <argument>%soa.catalog.variant.model.class%</argument>
+        </service>
+        <service id="soa.catalog.subscribed_property.form.type" class="SOA\CatalogBundle\Form\Type\SubscribedPropertyType">
+            <tag name="form.type" alias="subscribed_property" />
+            <argument>%soa.catalog.subscribed_property.model.class%</argument>
+        </service>
+    </services>
+</container>
