@@ -6,5 +6,5 @@ use Doctrine\Intl\Model\TranslatableInterface;
 
 interface PropertyInterface extends TranslatableInterface
 {
-
+    function getKey();
 } 

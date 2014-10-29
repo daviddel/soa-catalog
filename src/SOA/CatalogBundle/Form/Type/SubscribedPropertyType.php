@@ -2,6 +2,7 @@
 
 namespace SOA\CatalogBundle\Form\Type;
 
+use SOA\CatalogBundle\Form\DataTransformer\ObjectToPropertyTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -28,7 +29,10 @@ class SubscribedPropertyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('property', null, array('property' => 'key'))
+            ->add('property', 'object_field', array(
+                'class'    => 'SOA\CatalogBundle\Entity\Property',
+                'property' => 'key'
+            ))
             ->add('value', 'text')
             ->add('locale', 'text');
     }
@@ -40,8 +44,8 @@ class SubscribedPropertyType extends AbstractType
     {
         parent::setDefaultOptions($resolver);
         $resolver->setDefaults(array(
-            'data_class'            => $this->class,
-            'csrf_protection'       => false,
+            'data_class'        => $this->class,
+            'csrf_protection'   => false,
             //'csrf_field_name'       => '_token',
             //'intention'             => 'product',
         ));

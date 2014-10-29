@@ -4,7 +4,6 @@ namespace SOA\CatalogBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as REST;
 use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Util\Codes;
 use SOA\CatalogBundle\Model\ObjectList;
 use SOA\CatalogBundle\Model\ProductInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,6 +35,10 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/edit/{reference}")
+     *
+     * @param Request $request
+     * @param string $reference
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postEditAction(Request $request, $reference)
     {
@@ -47,44 +50,23 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/create")
+     *
+     * @param Request $request
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postCreateAction(Request $request)
     {
+        /** @var \SOA\CatalogBundle\Model\ProductInterface $product */
         $product = $this->getProductManager()->create();
 
         return $this->post($request, $product);
     }
 
-    public function newAction()
-    {
-        $product = $this->getProductManager()->create();
-        $product->setReference(uniqid())
-            ->setName('Product with name #'.$product->getReference())
-            ->setDescription('Product with description #'.$product->getReference());
-
-        for ($i = 0; $i < 4; $i++) {
-            $variant = $this->getVariantManager()->create();
-            $product->addVariant($variant);
-        }
-
-        for ($i = 0; $i < 4; $i++) {
-            $property = $this->getPropertyManager()->findOneBy(array('key' => 'PROP'.$i));
-            if ($property) {
-                $subscribedProperty = $this->getSubscribedPropertyManager()->create();
-                $subscribedProperty->setProperty($property)
-                    ->setValue(uniqid());
-
-                $product->addSubscribedProperty($subscribedProperty);
-            }
-        }
-
-        $this->getProductManager()->save($product);
-
-        return $product;
-    }
-
     /**
      * @REST\View(serializerGroups={"api"})
+     *
+     * @param string $reference
+     * @return ProductInterface
      */
     public function getAction($reference)
     {
@@ -94,10 +76,16 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/{reference}/variants/add")
+     *
+     * @param Request $request
+     * @param string $reference
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postProductVariantsAction(Request $request, $reference)
     {
         $product = $this->getProductByReference($reference);
+
+        /** @var \SOA\CatalogBundle\Model\VariantInterface $variant */
         $variant = $this->getVariantManager()->create();
         $product->addVariant($variant);
 
@@ -121,6 +109,8 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/{reference}/variants/remove")
+     *
+     * @param string $reference
      */
     public function deleteProductVariantsAction($reference)
     {
@@ -129,6 +119,9 @@ class ProductController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     *
+     * @param string $reference
+     * @return mixed
      */
     public function getVariantsAction($reference)
     {
@@ -140,11 +133,16 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/{reference}/properties/add")
+     *
+     * @param Request $request
+     * @param string $reference
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postProductPropertiesAction(Request $request, $reference)
     {
         $product = $this->getProductByReference($reference);
 
+        /** @var \SOA\CatalogBundle\Model\SubscribedPropertyInterface $subscribedProperty */
         $subscribedProperty = $this->getSubscribedPropertyManager()->create();
         $product->addSubscribedProperty($subscribedProperty);
 
@@ -168,6 +166,9 @@ class ProductController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/products/{reference}/variants/remove")
+     *
+     * @param string $reference
+     * @param string $key
      */
     public function deleteProductPropertiesAction($reference, $key)
     {
@@ -176,6 +177,9 @@ class ProductController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     *
+     * @param string $reference
+     * @return mixed
      */
     public function getPropertiesAction($reference)
     {
@@ -184,6 +188,11 @@ class ProductController extends FOSRestController
         return $product->getSubscribedProperties();
     }
 
+    /**
+     * @param Request $request
+     * @param ProductInterface $product
+     * @return array|\FOS\RestBundle\View\View
+     */
     protected function post(Request $request, ProductInterface $product)
     {
         $form = $this->createForm('product', $product);
@@ -203,6 +212,11 @@ class ProductController extends FOSRestController
         );
     }
 
+    /**
+     * @param $reference
+     * @throws NotFoundHttpException
+     * @return ProductInterface
+     */
     protected function getProductByReference($reference)
     {
         $product = $this->getProductManager()->findOneBy(array('reference' => $reference));
@@ -219,7 +233,7 @@ class ProductController extends FOSRestController
      */
     private function getProductManager()
     {
-        return $this->get('manager.factory')->getManager('\\SOA\\CatalogBundle\\Entity\\Product');
+        return $this->get('manager.factory')->getManager('\SOA\CatalogBundle\Entity\Product');
     }
 
     /**
@@ -227,7 +241,7 @@ class ProductController extends FOSRestController
      */
     private function getVariantManager()
     {
-        return $this->get('manager.factory')->getManager('\\SOA\\CatalogBundle\\Entity\\Variant');
+        return $this->get('manager.factory')->getManager('\SOA\CatalogBundle\Entity\Variant');
     }
 
     /**
@@ -235,14 +249,6 @@ class ProductController extends FOSRestController
      */
     private function getSubscribedPropertyManager()
     {
-        return $this->get('manager.factory')->getManager('\\SOA\\CatalogBundle\\Entity\\SubscribedProperty');
-    }
-
-    /**
-     * @return \Doctrine\Manager\Model\ModelManagerInterface
-     */
-    private function getPropertyManager()
-    {
-        return $this->get('manager.factory')->getManager('\\SOA\\CatalogBundle\\Entity\\Property');
+        return $this->get('manager.factory')->getManager('\SOA\CatalogBundle\Entity\SubscribedProperty');
     }
 }

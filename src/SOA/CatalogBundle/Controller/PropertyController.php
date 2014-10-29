@@ -16,6 +16,9 @@ class PropertyController extends FOSRestController
 {
     /**
      * @REST\View(serializerGroups={"api"})
+     *
+     * @param Request $request
+     * @return ObjectList
      */
     public function cgetAction(Request $request)
     {
@@ -35,6 +38,10 @@ class PropertyController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/properties/edit/{reference}")
+     *
+     * @param Request $request
+     * @param string $key
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postEditAction(Request $request, $key)
     {
@@ -46,9 +53,13 @@ class PropertyController extends FOSRestController
     /**
      * @REST\View(serializerGroups={"api"})
      * @REST\Route("/properties/create")
+     *
+     * @param Request $request
+     * @return array|\FOS\RestBundle\View\View
      */
     public function postCreateAction(Request $request)
     {
+        /** @var \SOA\CatalogBundle\Model\PropertyInterface $property */
         $property = $this->getPropertyManager()->create();
 
         return $this->post($request, $property);
@@ -56,12 +67,20 @@ class PropertyController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     *
+     * @param string $key
+     * @return mixed
      */
     public function getAction($key)
     {
         return $this->getPropertyByKey($key);
     }
 
+    /**
+     * @param Request $request
+     * @param PropertyInterface $property
+     * @return array|\FOS\RestBundle\View\View
+     */
     protected function post(Request $request, PropertyInterface $property)
     {
         $form = $this->createForm('property', $property);
@@ -70,7 +89,7 @@ class PropertyController extends FOSRestController
             $this->getPropertyManager()->save($property);
 
             return $this->routeRedirectView('soa_catalog_property_get_property', array(
-                    'key' => $property->getKey(),
+                    'key'       => $property->getKey(),
                     '_format'   => $request->getRequestFormat()
                 )
             );
@@ -81,6 +100,11 @@ class PropertyController extends FOSRestController
         );
     }
 
+    /**
+     * @param string $key
+     * @throws NotFoundHttpException
+     * @return PropertyInterface
+     */
     protected function getPropertyByKey($key)
     {
         $property = $this->getPropertyManager()->findOneBy(array('key' => $key));

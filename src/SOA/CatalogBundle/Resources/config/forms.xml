@@ -12,6 +12,11 @@
     </parameters>
 
     <services>
+        <service id="soa.catalog.object_field.form.type" class="SOA\CatalogBundle\Form\Type\ObjectFieldType">
+            <tag name="form.type" alias="object_field" />
+            <argument type="service" id="doctrine" />
+        </service>
+
         <service id="soa.catalog.product.form.type" class="SOA\CatalogBundle\Form\Type\ProductType">
             <tag name="form.type" alias="product" />
             <argument>%soa.catalog.product.model.class%</argument>

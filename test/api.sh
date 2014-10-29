@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd /var/www/soa-catalog;
 app/console do:da:dr --force || true
 app/console do:da:cr
 app/console do:sc:cr
@@ -21,5 +20,5 @@ curl -v -H "Accept: application/json" -H "Content-type: application/json" -XPOST
 ' http://$domain/app_dev.php/api/fr_FR/products/$ref/variants/add.json
 
 curl -v -H "Accept: application/json" -H "Content-type: application/json" -XPOST -d '
-{"subscribed_property":{"property":{"key":"'$ref'"},"value":"PROP1 VALUE"}}
+{"subscribed_property":{"property":{"key":"'$ref'"},"value":"PROP1 VALUE","locale":"fr_FR"}}
 ' http://$domain/app_dev.php/api/fr_FR/products/$ref/properties/add.json
