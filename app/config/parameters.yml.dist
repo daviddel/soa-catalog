@@ -19,3 +19,8 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+
+    scheme: http
+    host: catalog.ecommerce.dev
+    path: ''
+    base_url: '%scheme%://%host%%path%'
