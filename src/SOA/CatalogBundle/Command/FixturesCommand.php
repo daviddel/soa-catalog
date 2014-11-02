@@ -34,7 +34,7 @@ class FixturesCommand extends ContainerAwareCommand
                 'property' => array(
                     'key'       => $properties[$i],
                     'name'      => $faker->sentence(3),
-                    'locale'    => $faker->locale
+                    'locale'    => 'fr_FR'
                 )
             );
 
@@ -43,7 +43,9 @@ class FixturesCommand extends ContainerAwareCommand
                 $property
             );
 
-            $request->send();
+            $response = $request->send();
+            $output->writeln($response->getEffectiveUrl());
+            $output->writeln($response->getLocation());
         }
 
         // Load Products
@@ -55,7 +57,7 @@ class FixturesCommand extends ContainerAwareCommand
                     'reference'     => $products[$i],
                     'name'          => $faker->sentence(3),
                     'description'   => $faker->paragraph(3),
-                    'locale'        => $faker->locale
+                    'locale'        => 'fr_FR'
                 )
             );
 
@@ -64,7 +66,47 @@ class FixturesCommand extends ContainerAwareCommand
                 $product
             );
 
-            $request->send();
+            $response = $request->send();
+            $output->writeln($response->getEffectiveUrl());
+            $output->writeln($response->getLocation());
+        }
+
+        foreach ($products as $product) {
+            $variant = array(
+                'variant' => array(
+                )
+            );
+
+            $request = $client->post('/api/fr_FR/products/'.$product.'/variants/add.json',
+                $headers,
+                $variant
+            );
+
+            $response = $request->send();
+            $output->writeln($response->getEffectiveUrl());
+            $output->writeln($response->getLocation());
+
+            $subscribedPropertiesKeys = array_rand($properties, rand(1, count($properties)));
+            if (!is_array($subscribedPropertiesKeys))
+                $subscribedPropertiesKeys = array($subscribedPropertiesKeys);
+            foreach ($subscribedPropertiesKeys as $subscribedPropertyKey) {
+                $subscribedProperty = array(
+                    'subscribed_property' => array(
+                        'property'  => array('key' => $properties[$subscribedPropertyKey]),
+                        'value'     => $faker->sentence(3),
+                        'locale'    => 'fr_FR'
+                    )
+                );
+
+                $request = $client->post('/api/fr_FR/products/'.$product.'/properties/add.json',
+                    $headers,
+                    $subscribedProperty
+                );
+
+                $response = $request->send();
+                $output->writeln($response->getEffectiveUrl());
+                $output->writeln($response->getLocation());
+            }
         }
     }
 }

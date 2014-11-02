@@ -4,6 +4,7 @@ namespace SOA\CatalogBundle\Controller;
 
 use FOS\RestBundle\Controller\Annotations as REST;
 use FOS\RestBundle\Controller\FOSRestController;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use SOA\CatalogBundle\Model\ObjectList;
 use SOA\CatalogBundle\Model\ProductInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,7 @@ class ProductController extends FOSRestController
 {
     /**
      * @REST\View(serializerGroups={"api"})
+     * @Cache(smaxage=21600, expires="+6 hours")
      */
     public function cgetAction(Request $request)
     {
@@ -64,6 +66,7 @@ class ProductController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     * @Cache(smaxage=21600, expires="+6 hours")
      *
      * @param string $reference
      * @return ProductInterface
@@ -119,6 +122,7 @@ class ProductController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     * @Cache(smaxage=21600, expires="+6 hours")
      *
      * @param string $reference
      * @return mixed
@@ -177,6 +181,7 @@ class ProductController extends FOSRestController
 
     /**
      * @REST\View(serializerGroups={"api"})
+     * @Cache(smaxage=21600, expires="+6 hours")
      *
      * @param string $reference
      * @return mixed
